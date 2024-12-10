@@ -231,18 +231,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_nfc_kit
-      sha256: fe0b86f4883e4a0ebeb6d1fbbc5a86123b95969a4d225bc5a760acda5e3f42e8
+      sha256: "586a8309a7be4d9be307c46d5e9db1460a9f59a37a097c77d53e2f6bfc11be2d"
       url: "https://pub.dev"
     source: hosted
-    version: "3.5.2"
-  flutter_nfc_kit:
-    dependency: "direct main"
-    description:
-      name: flutter_nfc_kit
-      sha256: fe0b86f4883e4a0ebeb6d1fbbc5a86123b95969a4d225bc5a760acda5e3f42e8
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.5.2"
+    version: "3.4.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -407,6 +399,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  ndef:
+    dependency: transitive
+    description:
+      name: ndef
+      sha256: "634d2b5c6f2c186e953218bac9905f3f5e1824b15e30bd1ed6e03a91cdbc7293"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3"
   ndef:
     dependency: transitive
     description:
@@ -620,14 +620,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
-  sprintf:
-    dependency: transitive
-    description:
-      name: sprintf
-      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.0"
   stack_trace:
     dependency: transitive
     description:
@@ -692,14 +684,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  uuid:
-    dependency: transitive
-    description:
-      name: uuid
-      sha256: a5be9ef6618a7ac1e964353ef476418026db906c4facdedaa299b7a2e71690ff
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.1"
   uuid:
     dependency: transitive
     description:
