@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:swipezone/screens/export_page.dart';
 import 'package:swipezone/screens/home_page.dart';
+import 'package:swipezone/screens/import_page.dart';
 import 'package:swipezone/screens/planning_page.dart';
 import 'package:swipezone/screens/select_page.dart';
 
@@ -38,6 +40,22 @@ final GoRouter _router = GoRouter(
             );
           },
         ),
+        GoRoute(
+          path: '/import_page',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ImportPage(
+              title: "Import Page",
+              );
+          } 
+        ),
+        GoRoute(
+          path: '/export_page',
+          builder: (BuildContext context, GoRouterState state){ 
+            return const ExportPage(
+              title: 'Export Page'
+              );
+              }
+          )
       ],
     ),
   ],

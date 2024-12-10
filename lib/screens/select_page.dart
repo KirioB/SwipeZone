@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swipezone/domains/location_manager.dart';
 import 'package:swipezone/repositories/models/location.dart';
+import 'package:go_router/go_router.dart';
 
 class SelectPage extends StatefulWidget {
   final String title;
@@ -28,7 +29,7 @@ class _SelectPageState extends State<SelectPage> {
                 leading: Icon(Icons.file_upload),
                 title: Text("Import"),
                 onTap: () {
-                  // Logique pour "Import"
+                  GoRouter.of(context).go('/import_page');
                   print("Import clicked");
                   Navigator.pop(context); // Ferme le menu
                 },
@@ -37,6 +38,7 @@ class _SelectPageState extends State<SelectPage> {
                 leading: Icon(Icons.file_download),
                 title: Text("Export"),
                 onTap: () {
+                  GoRouter.of(context).go('/export_page');
                   // Logique pour "Export"
                   print("Export clicked");
                   Navigator.pop(context); // Ferme le menu

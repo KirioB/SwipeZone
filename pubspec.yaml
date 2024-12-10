@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   isar: ^3.1.0+1
   path_provider: ^2.1.5
-  flutter_nfc_kit: ^4.0.0 # Vérifiez la dernière version disponible
+  flutter_nfc_kit: ^3.4.2 # Vérifiez la dernière version disponible
 dev_dependencies:
   flutter_test:
     sdk: flutter
