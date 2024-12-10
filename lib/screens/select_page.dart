@@ -15,6 +15,41 @@ class SelectPage extends StatefulWidget {
 class _SelectPageState extends State<SelectPage> {
   Map<Location, bool> plans = {};
 
+  // Fonction pour ouvrir le menu flottant
+  void _showImportExportMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.file_upload),
+                title: Text("Import"),
+                onTap: () {
+                  // Logique pour "Import"
+                  print("Import clicked");
+                  Navigator.pop(context); // Ferme le menu
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.file_download),
+                title: Text("Export"),
+                onTap: () {
+                  // Logique pour "Export"
+                  print("Export clicked");
+                  Navigator.pop(context); // Ferme le menu
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -53,12 +88,20 @@ class _SelectPageState extends State<SelectPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+<<<<<<< HEAD
         onPressed: () {
           GoRouter.of(context).push('/planningpage');
         },
         tooltip: 'Add plan',
         child: const Icon(Icons.add),
       ),
+=======
+  onPressed: _showImportExportMenu, 
+  tooltip: 'Import/export Choices',
+  child: const Icon(Icons.add),  // Le "+" sera représenté par l'icône "add"
+),
+
+>>>>>>> eb89fc1 (bouton import/export)
     );
   }
 }
