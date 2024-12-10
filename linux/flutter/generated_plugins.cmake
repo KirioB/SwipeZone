@@ -1,6 +1,5 @@
 #
 # Generated file, do not edit.
-# Fichier généré, ne pas éditer.
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
