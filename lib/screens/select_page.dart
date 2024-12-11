@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:swipezone/domains/location_manager.dart';
 import 'package:swipezone/repositories/models/location.dart';
-import 'package:go_router/go_router.dart';
 
 class SelectPage extends StatefulWidget {
   final String title;
@@ -15,6 +14,47 @@ class SelectPage extends StatefulWidget {
 
 class _SelectPageState extends State<SelectPage> {
   Map<Location,bool> plans = {};
+
+void _showBottomMenu(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.file_upload),
+              title: const Text("Import Page"),
+              onTap: () {
+                GoRouter.of(context).go('/import_page');
+                Navigator.pop(context); // Ferme le menu
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.file_download),
+              title: const Text("Export Page"),
+              onTap: () {
+                GoRouter.of(context).go('/export_page');
+                Navigator.pop(context); // Ferme le menu
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: const Text("Planning Page"),
+              onTap: () {
+                GoRouter.of(context).go('/planning_page');
+                Navigator.pop(context); // Ferme le menu
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   @override
   void initState() {
@@ -55,9 +95,11 @@ class _SelectPageState extends State<SelectPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Add plan',
-        child: const Icon(Icons.add),
+        onPressed: () {
+         _showBottomMenu(context);
+        },
+        tooltip: 'Options',
+        child: const Icon(Icons.menu),
       ),
     );
   }
