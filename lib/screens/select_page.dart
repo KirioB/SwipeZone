@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:swipezone/domains/location_manager.dart';
 import 'package:swipezone/repositories/models/location.dart';
 import 'package:go_router/go_router.dart';
@@ -13,43 +14,7 @@ class SelectPage extends StatefulWidget {
 }
 
 class _SelectPageState extends State<SelectPage> {
-  List<Location> plans = [];
-
-  // Fonction pour ouvrir le menu flottant
-  void _showImportExportMenu() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.file_upload),
-                title: Text("Import"),
-                onTap: () {
-                  GoRouter.of(context).go('/import_page');
-                  print("Import clicked");
-                  Navigator.pop(context); // Ferme le menu
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.file_download),
-                title: Text("Export"),
-                onTap: () {
-                  GoRouter.of(context).go('/export_page');
-                  // Logique pour "Export"
-                  print("Export clicked");
-                  Navigator.pop(context); // Ferme le menu
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  Map<Location,bool> plans = {};
 
   @override
   void initState() {
@@ -58,7 +23,7 @@ class _SelectPageState extends State<SelectPage> {
   }
 
   Future<void> _loadPlans() async {
-    List<Location> fetchedPlans = LocationManager().wantedLocations;
+    Map<Location,bool> fetchedPlans = LocationManager().filters;
     setState(() {
       plans = fetchedPlans;
     });
@@ -74,17 +39,26 @@ class _SelectPageState extends State<SelectPage> {
       body: ListView.builder(
         itemCount: plans.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(plans[index].nom),
-          );
+          bool isCheck = plans.values.elementAt(index);
+          return 
+              ListTile(
+                //leading: Image.network(plans[index].photoUrl ?? "", width: 50, height: 50),
+                title: Text(plans.keys.elementAt(index).nom),
+                trailing:  Checkbox(value: isCheck, onChanged: (val){
+                setState(() {
+                  isCheck = !isCheck;
+                  plans[plans.keys.elementAt(index)] = isCheck;
+                });
+              })
+              );
+          
         },
       ),
       floatingActionButton: FloatingActionButton(
-  onPressed: _showImportExportMenu, 
-  tooltip: 'Import/export Choices',
-  child: const Icon(Icons.add),  // Le "+" sera représenté par l'icône "add"
-),
-
+        onPressed: () {},
+        tooltip: 'Add plan',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

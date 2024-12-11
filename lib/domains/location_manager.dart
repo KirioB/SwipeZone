@@ -11,11 +11,13 @@ class LocationManager {
 
   List<Location> locations = [];
   List<Location> unwantedLocations = [];
-  List<Location> wantedLocations = [];
+  Map<Location, bool> filters = {};
+
   int currentIndex = 0;
 
   void Iwant() {
-    wantedLocations.add(locations[currentIndex]);
+    filters[locations[currentIndex]] = false;
+
     next();
   }
 
