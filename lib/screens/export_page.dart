@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:ndef/ndef.dart' as ndef;
 import 'dart:io'; // Pour vérifier si c'est Android
 
 class ExportPage extends StatefulWidget {
@@ -61,6 +62,44 @@ class _ExportPageState extends State<ExportPage> with WidgetsBindingObserver {
     intent.launch();
   }
 
+void writeNfcMessage() async {
+  try {
+    // Démarre la session NFC (nécessaire pour interagir avec le tag)
+    
+
+    // Récupère le tag NFC (avec un délai de 20 secondes)
+    var tag = await FlutterNfcKit.poll(timeout: Duration(seconds: 20));
+    
+    // Vérifie que le tag est prêt à recevoir des données NDEF
+    if (tag != null && tag.ndefWritable == true) {
+      // Message NDEF à envoyer (texte)
+      var message = 'Bonjour, voici un transfert NFC de texte!';
+      
+      // Créer un enregistrement NDEF de type texte
+      // Créer un enregistrement NDEF de type texte avec les paramètres appropriés
+      var textRecord = ndef.TextRecord(
+        text: message,
+        language: 'fr',  // Langue du texte
+        encoding: ndef.TextEncoding.UTF8,  // Encodage du texte
+      );
+      // Écrire l'enregistrement sur le tag
+      await FlutterNfcKit.writeNDEFRecords([textRecord]);
+      
+      print("Message NDEF écrit avec succès : $message");
+    } else {
+      print("Le tag n'est pas prêt pour l'écriture NDEF.");
+    }
+  } catch (e) {
+    print("Erreur lors de l'écriture du message NDEF: $e");
+  } finally {
+    // Terminer la session NFC
+    await FlutterNfcKit.finish();
+  }
+}
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +127,17 @@ class _ExportPageState extends State<ExportPage> with WidgetsBindingObserver {
                   child: Text('Activer le NFC'),
                 ),
               ),
+            // Bouton de transfert affiché uniquement si le NFC est activé
+          if (_isNfcAvailable)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: ElevatedButton(
+                onPressed: () {
+                  print("Bouton Export - Transfert de données appuyé.");
+                },
+                child: Text('Lancer la reception de données'),
+              ),
+            ),
           ],
         ),
       ),

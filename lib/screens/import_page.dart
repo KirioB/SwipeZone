@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:ndef/ndef.dart' as ndef;
 import 'dart:io'; // Pour vérifier si c'est Android
 
 class ImportPage extends StatefulWidget {
@@ -60,6 +61,22 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
     intent.launch();
   }
 
+
+
+
+  void readNfcMessage() async {
+    var tag = await FlutterNfcKit.poll();
+    if (tag != null && tag.ndefAvailable == true) {
+      var records = await FlutterNfcKit.readNDEFRecords();
+      if (records.isNotEmpty) {
+        print("Message NDEF reçu: ${records[0].payload}");
+        setState(() {
+          nfcStatusMessage = "Message NDEF reçu: ${records[0].payload}";
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,6 +104,17 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
                   child: Text('Activer le NFC'),
                 ),
               ),
+            // Bouton de transfert affiché uniquement si le NFC est activé
+          if (_isNfcAvailable)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: ElevatedButton(
+                onPressed: () {
+                  print("Bouton Import - Transfert de données appuyé.");
+                },
+                child: Text("Lancer l'envoie de données"),
+              ),
+            ),
           ]
         )
       ),
