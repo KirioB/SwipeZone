@@ -133,6 +133,7 @@ void writeNfcMessage() async {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: ElevatedButton(
                 onPressed: () {
+                  writeNfcMessage();
                   print("Bouton Export - Transfert de données appuyé.");
                 },
                 child: Text('Lancer la reception de données'),
