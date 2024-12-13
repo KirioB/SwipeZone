@@ -110,6 +110,7 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: ElevatedButton(
                 onPressed: () {
+                  readNfcMessage();
                   print("Bouton Import - Transfert de données appuyé.");
                 },
                 child: Text("Lancer l'envoie de données"),
