@@ -3,6 +3,8 @@ import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:ndef/ndef.dart' as ndef;
 import 'dart:io'; // Pour vérifier si c'est Android
+import 'package:nfc_manager/nfc_manager.dart';
+import 'dart:typed_data';
 
 class ExportPage extends StatefulWidget {
   final String title;
@@ -62,40 +64,39 @@ class _ExportPageState extends State<ExportPage> with WidgetsBindingObserver {
     intent.launch();
   }
 
-void writeNfcMessage() async {
-  try {
-    // Démarre la session NFC (nécessaire pour interagir avec le tag)
-    
+  void _startNFCWriting() async {
+    try {
+// check if NFC is available on the device or not.
+      bool isAvailable = await NfcManager.instance.isAvailable();
 
-    // Récupère le tag NFC (avec un délai de 20 secondes)
-    var tag = await FlutterNfcKit.poll(timeout: Duration(seconds: 20));
-    
-    // Vérifie que le tag est prêt à recevoir des données NDEF
-    if (tag != null && tag.ndefWritable == true) {
-      // Message NDEF à envoyer (texte)
-      var message = 'Bonjour, voici un transfert NFC de texte!';
-      
-      // Créer un enregistrement NDEF de type texte
-      // Créer un enregistrement NDEF de type texte avec les paramètres appropriés
-      var textRecord = ndef.TextRecord(
-        text: message,
-        language: 'fr',  // Langue du texte
-        encoding: ndef.TextEncoding.UTF8,  // Encodage du texte
-      );
-      // Écrire l'enregistrement sur le tag
-      await FlutterNfcKit.writeNDEFRecords([textRecord]);
-      
-      print("Message NDEF écrit avec succès : $message");
-    } else {
-      print("Le tag n'est pas prêt pour l'écriture NDEF.");
+// If NFC is available, start a session to listen for NFC tags.
+      if (isAvailable) { 
+ NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+
+        try {
+//When an NFC tag is discovered, we check if it supports NDEF technology.
+          NdefMessage message =
+              NdefMessage([NdefRecord.createText('Hello, NFC!')]);
+          await Ndef.from(tag)?.write(message);//If it supports NDEF, create an NDEF message and write it to the tag.
+          debugPrint('Data emitted successfully');
+          Uint8List payload = message.records.first.payload;
+          String text = String.fromCharCodes(payload);
+          debugPrint("Written data: $text");
+
+//stop the NFC Session
+          NfcManager.instance.stopSession();
+        } catch (e) {
+          debugPrint('Error emitting NFC data: $e');
+        }
+      });
+      } else {
+        debugPrint('NFC not available.');
+      }
+    } catch (e) {
+      debugPrint('Error writing to NFC: $e');
     }
-  } catch (e) {
-    print("Erreur lors de l'écriture du message NDEF: $e");
-  } finally {
-    // Terminer la session NFC
-    await FlutterNfcKit.finish();
   }
-}
+
 
 
 
@@ -133,10 +134,10 @@ void writeNfcMessage() async {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: ElevatedButton(
                 onPressed: () {
-                  writeNfcMessage();
+                  _startNFCWriting();
                   print("Bouton Export - Transfert de données appuyé.");
                 },
-                child: Text('Lancer la reception de données'),
+                child: Text('Lancer le transfere de données'),
               ),
             ),
           ],

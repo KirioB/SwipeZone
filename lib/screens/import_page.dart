@@ -3,6 +3,8 @@ import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:ndef/ndef.dart' as ndef;
 import 'dart:io'; // Pour vérifier si c'est Android
+import 'package:nfc_manager/nfc_manager.dart';
+import 'dart:typed_data';
 
 class ImportPage extends StatefulWidget {
   final String title;
@@ -61,22 +63,34 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
     intent.launch();
   }
 
-
-
-
-  void readNfcMessage() async {
-    var tag = await FlutterNfcKit.poll();
-    if (tag != null && tag.ndefAvailable == true) {
-      var records = await FlutterNfcKit.readNDEFRecords();
-      if (records.isNotEmpty) {
-        print("Message NDEF reçu: ${records[0].payload}");
-        setState(() {
-          nfcStatusMessage = "Message NDEF reçu: ${records[0].payload}";
-        });
+   void _startNFCReading() async {
+    print("read start");
+    try {
+      bool isAvailable = await NfcManager.instance.isAvailable();
+      print("on try");
+      //We first check if NFC is available on the device.
+      if (isAvailable) {
+        print("nfc available");
+      //If NFC is available, start an NFC session and listen for NFC tags to be discovered.
+        NfcManager.instance.startSession(
+          
+          onDiscovered: (NfcTag tag) async {
+            // Process NFC tag, When an NFC tag is discovered, print its data to the console.
+            print('NFC Tag Detected: ${tag.data}');
+          },
+          
+        );
+      } else {
+        print('NFC not available.');
       }
+    } catch (e) {
+      print('Error reading NFC: $e');
     }
+    print("sortie du read");
   }
 
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,10 +124,10 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: ElevatedButton(
                 onPressed: () {
-                  readNfcMessage();
-                  print("Bouton Import - Transfert de données appuyé.");
+                  _startNFCReading();
+                  print("Bouton Import - Reception de données appuyé.");
                 },
-                child: Text("Lancer l'envoie de données"),
+                child: Text("Lancer la reception de données"),
               ),
             ),
           ]

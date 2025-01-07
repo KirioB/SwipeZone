@@ -44,6 +44,7 @@ dependencies:
 >>>>>>> 5a7ae45 (import export page with nfc check)
   android_intent_plus: ^4.0.0
   ndef: ^0.3.3
+  nfc_manager: ^3.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
