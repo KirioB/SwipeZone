@@ -80,11 +80,11 @@ final GoRouter _router = GoRouter(
         ),
         GoRoute(
           path: '/export_page',
-          builder: (BuildContext context, GoRouterState state){ 
+          builder: (BuildContext context, GoRouterState state) {
             return const ExportPage(
-              title: 'Export Page'
+              title: "Export Page",
               );
-              }
+          } 
           )
       ],
     ),
@@ -92,8 +92,3 @@ final GoRouter _router = GoRouter(
 );
 
 
-//test YannDGP
-//test KirioB
-//test Cel
-/*taaaaaaatatatatataaaaaaaa*/
-//test add necessaire ou non
