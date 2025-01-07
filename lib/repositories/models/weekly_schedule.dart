@@ -4,11 +4,13 @@ class Schedule {
 
   Schedule({required this.openAt, required this.closeAt});
 }
-class DailySchedule{
+
+class DailySchedule {
   List<Schedule> schedules;
 
   DailySchedule({required this.schedules});
 }
+
 class WeeklySchedule {
   List<DailySchedule> dailySchedules;
 

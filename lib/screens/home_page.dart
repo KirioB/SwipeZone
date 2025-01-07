@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   void startPopupIsolate() async {
     // Create communication ports
     receivePort = ReceivePort();
-    
+
     // Spawn the isolate
     await Isolate.spawn<IsolateMessage>(
       popupIsolate,
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.connectionState == ConnectionState.done) {
             var data = snapshot.data;
             if (data == null || data.isEmpty) {
-              return  Text("No data");
+              return Text("No data");
             }
 
             LocationManager().locations = data;
@@ -88,9 +88,11 @@ class _HomePageState extends State<HomePage> {
               LocationCard(location: data[LocationManager().currentIndex]),
               Center(
                 child: Switch(
-                  value: Provider.of<ThemeProvider>(context).getThemeMode() == ThemeMode.dark,
+                  value: Provider.of<ThemeProvider>(context).getThemeMode() ==
+                      ThemeMode.dark,
                   onChanged: (value) {
-                    Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .toggleTheme();
                   },
                 ),
               ),

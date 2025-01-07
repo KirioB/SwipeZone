@@ -8,7 +8,8 @@ class ExportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Texte prédéfini à exporter
-    final String textToExport = "Voici le texte à exporter depuis la page ExportPage.";
+    final String textToExport =
+        "Voici le texte à exporter depuis la page ExportPage.";
 
     return Scaffold(
       appBar: AppBar(

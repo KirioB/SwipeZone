@@ -1,5 +1,4 @@
-class Contact{
-
+class Contact {
   String? phoneNumber;
   String? mail;
   String? website;

@@ -14,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final pref = await SharedPreferences.getInstance();
-  
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(pref: pref),
@@ -71,24 +71,20 @@ final GoRouter _router = GoRouter(
           },
         ),
         GoRoute(
-          path: '/import_page',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ImportPage(
-              title: "Import Page",
+            path: '/import_page',
+            builder: (BuildContext context, GoRouterState state) {
+              return const ImportPage(
+                title: "Import Page",
               );
-          } 
-        ),
+            }),
         GoRoute(
-          path: '/export_page',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ExportPage(
-              title: "Export Page",
+            path: '/export_page',
+            builder: (BuildContext context, GoRouterState state) {
+              return const ExportPage(
+                title: "Export Page",
               );
-          } 
-          )
+            })
       ],
     ),
   ],
 );
-
-

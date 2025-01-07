@@ -15,7 +15,7 @@ class ImportPage extends StatefulWidget {
   State<ImportPage> createState() => _ImportPageState();
 }
 
-class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
+class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver {
   String nfcStatusMessage = "Checking NFC availability...";
   bool _isNfcAvailable = false;
 
@@ -46,6 +46,7 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
       });
     }
   }
+
   // Détecte les changements dans le cycle de vie de l'application
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -63,7 +64,7 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
     intent.launch();
   }
 
-   void _startNFCReading() async {
+  void _startNFCReading() async {
     print("read start");
     try {
       bool isAvailable = await NfcManager.instance.isAvailable();
@@ -71,14 +72,12 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
       //We first check if NFC is available on the device.
       if (isAvailable) {
         print("nfc available");
-      //If NFC is available, start an NFC session and listen for NFC tags to be discovered.
+        //If NFC is available, start an NFC session and listen for NFC tags to be discovered.
         NfcManager.instance.startSession(
-          
           onDiscovered: (NfcTag tag) async {
             // Process NFC tag, When an NFC tag is discovered, print its data to the console.
             print('NFC Tag Detected: ${tag.data}');
           },
-          
         );
       } else {
         print('NFC not available.');
@@ -89,8 +88,6 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
     print("sortie du read");
   }
 
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,40 +96,36 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver{
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Afficher le message en fonction de la disponibilité du NFC
-            Text(
-              _isNfcAvailable
-                  ? 'NFC est activé'
-                  : 'NFC est désactivé, veuillez l\'activer',
-              style: TextStyle(fontSize: 18),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        // Afficher le message en fonction de la disponibilité du NFC
+        Text(
+          _isNfcAvailable
+              ? 'NFC est activé'
+              : 'NFC est désactivé, veuillez l\'activer',
+          style: TextStyle(fontSize: 18),
+        ),
+        // Si NFC est désactivé, afficher le bouton "Activer le NFC"
+        if (!_isNfcAvailable)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: ElevatedButton(
+              onPressed: openNfcSettings, // Ouvre les paramètres du NFC
+              child: Text('Activer le NFC'),
             ),
-            // Si NFC est désactivé, afficher le bouton "Activer le NFC"
-            if (!_isNfcAvailable)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: ElevatedButton(
-                  onPressed: openNfcSettings, // Ouvre les paramètres du NFC
-                  child: Text('Activer le NFC'),
-                ),
-              ),
-            // Bouton de transfert affiché uniquement si le NFC est activé
-          if (_isNfcAvailable)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: ElevatedButton(
-                onPressed: () {
-                  _startNFCReading();
-                  print("Bouton Import - Reception de données appuyé.");
-                },
-                child: Text("Lancer la reception de données"),
-              ),
+          ),
+        // Bouton de transfert affiché uniquement si le NFC est activé
+        if (_isNfcAvailable)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: ElevatedButton(
+              onPressed: () {
+                _startNFCReading();
+                print("Bouton Import - Reception de données appuyé.");
+              },
+              child: Text("Lancer la reception de données"),
             ),
-          ]
-        )
-      ),
+          ),
+      ])),
     );
   }
 }
