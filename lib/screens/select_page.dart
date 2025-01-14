@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:swipezone/domains/location_manager.dart';
 import 'package:swipezone/repositories/models/location.dart';
 
@@ -27,8 +28,7 @@ class _SelectPageState extends State<SelectPage> {
     });
   }
 
-  // Fonction pour ouvrir le menu flottant
-  void _showImportExportMenu() {
+  void _showBottomMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -38,20 +38,26 @@ class _SelectPageState extends State<SelectPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.file_upload),
-                title: Text("Import"),
+                leading: const Icon(Icons.file_upload),
+                title: const Text("Import Page"),
                 onTap: () {
-                  // Logique pour "Import"
-                  print("Import clicked");
+                  GoRouter.of(context).go('/import_page');
                   Navigator.pop(context); // Ferme le menu
                 },
               ),
               ListTile(
-                leading: Icon(Icons.file_download),
-                title: Text("Export"),
+                leading: const Icon(Icons.file_download),
+                title: const Text("Export Page"),
                 onTap: () {
-                  // Logique pour "Export"
-                  print("Export clicked");
+                  GoRouter.of(context).go('/export_page');
+                  Navigator.pop(context); // Ferme le menu
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.calendar_today),
+                title: const Text("Planning Page"),
+                onTap: () {
+                  GoRouter.of(context).go('/planning_page');
                   Navigator.pop(context); // Ferme le menu
                 },
               ),
@@ -78,10 +84,12 @@ class _SelectPageState extends State<SelectPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showImportExportMenu, // Appel de la fonction pour ouvrir le menu
-        tooltip: 'Add plan',
+        onPressed: () => _showBottomMenu(context), // Appel avec le contexte
+        tooltip: 'Menu',
         child: const Icon(Icons.add),
       ),
     );
   }
 }
+
+

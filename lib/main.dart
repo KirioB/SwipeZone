@@ -82,7 +82,7 @@ final GoRouter _router = GoRouter(
           path: '/export_page',
           builder: (BuildContext context, GoRouterState state) {
             // Récupérer les données de LocationManager
-            final locationsData = LocationManager().locations
+            final locationsData = LocationManager().wantedLocations
                 .map((location) => [location.nom, location.description, location.schedule,location.contact,location.photoUrl,location.category,location.activities,location.localization])
                 .toList();
 

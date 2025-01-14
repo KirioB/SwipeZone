@@ -8,7 +8,7 @@ class LocationManager {
   factory LocationManager() {
     return _instance;
   }
-
+  List<Location> wantedLocations = [];
   List<Location> locations = [];
   List<Location> unwantedLocations = [];
   Map<Location, bool> filters = {};
@@ -16,7 +16,7 @@ class LocationManager {
   int currentIndex = 0;
 
   void Iwant() {
-    filters[locations[currentIndex]] = false;
+    wantedLocations.add(locations[currentIndex]);
 
     next();
   }

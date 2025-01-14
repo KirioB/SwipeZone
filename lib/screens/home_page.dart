@@ -51,13 +51,6 @@ class _HomePageState extends State<HomePage> {
       popupIsolate,
       IsolateMessage(receivePort!.sendPort),
     );
-
-    // Listen for messages from the isolate
-    receivePort!.listen((message) {
-      if (message == 'showPopup') {
-        launchPopUpeach10sec(context);
-      }
-    });
   }
 
   @override
@@ -147,24 +140,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> launchPopUpeach10sec(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 10));
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Hello"),
-          content: const Text("This is a popup"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Close"),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
