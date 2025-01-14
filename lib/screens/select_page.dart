@@ -14,10 +14,12 @@ class SelectPage extends StatefulWidget {
 
 class _SelectPageState extends State<SelectPage> {
   List<Location> plans = [];
+  bool shouldShowImportCvs = false;
 
   @override
   void initState() {
     super.initState();
+    bool shouldShowImportCvs = true;
     _loadPlans();
   }
 
@@ -40,16 +42,20 @@ class _SelectPageState extends State<SelectPage> {
               ListTile(
                 leading: const Icon(Icons.file_upload),
                 title: const Text("Import Page"),
-                onTap: () {
-                  GoRouter.of(context).go('/import_page');
-                  Navigator.pop(context); // Ferme le menu
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  await GoRouter.of(context).push('/import_page').then(
+                    (value) {
+                      _loadPlans();
+                    },
+                  );
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.file_download),
                 title: const Text("Export Page"),
                 onTap: () {
-                  GoRouter.of(context).go('/export_page');
+                  GoRouter.of(context).push('/export_page');
                   Navigator.pop(context); // Ferme le menu
                 },
               ),
@@ -57,7 +63,7 @@ class _SelectPageState extends State<SelectPage> {
                 leading: const Icon(Icons.calendar_today),
                 title: const Text("Planning Page"),
                 onTap: () {
-                  GoRouter.of(context).go('/planning_page');
+                  GoRouter.of(context).push('/planning_page');
                   Navigator.pop(context); // Ferme le menu
                 },
               ),
@@ -91,5 +97,3 @@ class _SelectPageState extends State<SelectPage> {
     );
   }
 }
-
-

@@ -1,12 +1,12 @@
 import 'package:swipezone/repositories/models/location.dart';
 
 class LocationManager {
-  static final LocationManager _instance = LocationManager._internal();
+  static final LocationManager instance = LocationManager._internal();
 
   LocationManager._internal();
 
   factory LocationManager() {
-    return _instance;
+    return instance;
   }
   List<Location> wantedLocations = [];
   List<Location> locations = [];
@@ -29,6 +29,12 @@ class LocationManager {
   void next() {
     if (currentIndex != locations.length - 1) {
       currentIndex++;
+    }
+  }
+
+  void addLocationToWanted(Location newlocation) {
+    if (!wantedLocations.contains(newlocation)) {
+      wantedLocations.add(newlocation);
     }
   }
 }

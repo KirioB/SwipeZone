@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                         "Don't like: ${LocationManager().unwantedLocations.length}",
                         style:
                             const TextStyle(color: Colors.red, fontSize: 20)),
-                    Text("Like: ${LocationManager().filters.length}",
+                    Text("Like: ${LocationManager().wantedLocations.length}",
                         style:
                             const TextStyle(color: Colors.green, fontSize: 20)),
                   ],
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
               Center(
                 child: FilledButton(
                     onPressed: () {
-                      GoRouter.of(context).go('/selectpage');
+                      GoRouter.of(context).go('/select_page');
                     },
                     child: const Text("Create plan")),
               )
@@ -139,5 +139,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 }

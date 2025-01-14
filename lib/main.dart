@@ -56,18 +56,18 @@ final GoRouter _router = GoRouter(
       },
       routes: <RouteBase>[
         GoRoute(
-          path: 'planningpage',
+          path: 'planning_page',
           builder: (BuildContext context, GoRouterState state) {
             return const PlanningPage(
-              title: "PlanningPage",
+              title: "Planning Page",
             );
           },
         ),
         GoRoute(
-          path: 'selectpage',
+          path: 'select_page',
           builder: (BuildContext context, GoRouterState state) {
             return const SelectPage(
-              title: "SelectPage",
+              title: "Select Page",
             );
           },
         ),
@@ -82,8 +82,18 @@ final GoRouter _router = GoRouter(
           path: '/export_page',
           builder: (BuildContext context, GoRouterState state) {
             // Récupérer les données de LocationManager
-            final locationsData = LocationManager().wantedLocations
-                .map((location) => [location.nom, location.description, location.schedule,location.contact,location.photoUrl,location.category,location.activities,location.localization])
+            final locationsData = LocationManager()
+                .wantedLocations
+                .map((location) => [
+                      location.nom,
+                      location.description,
+                      location.schedule,
+                      location.contact,
+                      location.photoUrl,
+                      location.category,
+                      location.activities,
+                      location.localization
+                    ])
                 .toList();
 
             return ExportPage(
@@ -92,7 +102,6 @@ final GoRouter _router = GoRouter(
             );
           },
         ),
-
       ],
     ),
   ],

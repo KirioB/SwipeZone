@@ -1,91 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:android_intent_plus/android_intent.dart';
-import 'package:ndef/ndef.dart' as ndef;
-import 'dart:io'; // Pour vérifier si c'est Android
-import 'package:nfc_manager/nfc_manager.dart';
-import 'dart:typed_data';
+import 'package:file_selector/file_selector.dart';
+import 'package:csv/csv.dart';
+import 'package:go_router/go_router.dart';
+import 'package:swipezone/domains/location_manager.dart';
+import 'package:swipezone/repositories/models/activities.dart';
+import 'package:swipezone/repositories/models/categories.dart';
+import 'package:swipezone/repositories/models/localization.dart';
+import 'package:swipezone/repositories/models/location.dart';
 
 class ImportPage extends StatefulWidget {
   final String title;
-
   const ImportPage({super.key, required this.title});
 
   @override
-  State<ImportPage> createState() => _ImportPageState();
+  _ImportPageState createState() => _ImportPageState();
 }
 
-class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver {
-  String nfcStatusMessage = "Checking NFC availability...";
-  bool _isNfcAvailable = false;
+class _ImportPageState extends State<ImportPage> {
+  // Liste pour afficher un aperçu des données importées
+  List<List<dynamic>> importedData = [];
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this); // Observe le cycle de vie
-    checkNfcAvailability();
-  }
+  Future<void> _importCSV() async {
+    // Utiliser package:file_selector pour sélectionner un fichier
+    final XFile? file = await openFile(acceptedTypeGroups: [
+      XTypeGroup(label: 'CSV', extensions: ['csv']),
+    ]);
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this); // Supprime l'observateur
-    super.dispose();
-  }
+    if (file != null) {
+      // Lire le contenu du fichier CSV
+      final csvString = await file.readAsString();
+      // Convertir le contenu en une liste de données
+      List<List<dynamic>> data = CsvToListConverter().convert(csvString);
 
-  // Fonction de vérification de la disponibilité du NFC
-  void checkNfcAvailability() async {
-    var availability = await FlutterNfcKit.nfcAvailability;
-
-    if (availability != NFCAvailability.available) {
+      // Mettre à jour l'état pour afficher les données importées
       setState(() {
-        _isNfcAvailable = false; // NFC désactivé
+        importedData = data;
       });
-    } else {
-      setState(() {
-        _isNfcAvailable = true; // NFC activé
-      });
+
+      // Ajouter les données importées dans la liste wantedLocations
+      _addDataToLocationManager(data, context);
     }
   }
 
-  // Détecte les changements dans le cycle de vie de l'application
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      // Vérifie l'état du NFC lorsque l'application revient au premier plan
-      checkNfcAvailability();
-    }
-  }
-
-  void openNfcSettings() {
-    final intent = AndroidIntent(
-      action: 'android.settings.NFC_SETTINGS',
-    );
-    intent.launch();
-  }
-
-  void _startNFCReading() async {
-    print("read start");
-    try {
-      bool isAvailable = await NfcManager.instance.isAvailable();
-      print("on try");
-      //We first check if NFC is available on the device.
-      if (isAvailable) {
-        print("nfc available");
-        //If NFC is available, start an NFC session and listen for NFC tags to be discovered.
-        NfcManager.instance.startSession(
-          onDiscovered: (NfcTag tag) async {
-            // Process NFC tag, When an NFC tag is discovered, print its data to the console.
-            print('NFC Tag Detected: ${tag.data}');
-          },
+  // Ajouter les données importées dans le LocationManager
+  void _addDataToLocationManager(
+      List<List<dynamic>> data, BuildContext context) {
+    // Assumer que les données sont bien formatées pour correspondre à Location
+    for (var item in data) {
+      if (item.length >= 8) {
+        // Créer une nouvelle instance de Location à partir des données importées
+        if (item[2]=='null'){}
+        Location newLocation = Location(
+          nom: item[0] ?? '',
+          description: item[1] ?? '',
+          schedule: null,
+          contact: null,
+          photoUrl: item[4] ?? '',
+          category: Categories.Church,
+          activities: [Activities.Boxing],
+          localization: Localization("", 0.0, 0.0),
         );
-      } else {
-        print('NFC not available.');
+
+        // Ajouter la nouvelle location dans le LocationManager
+        LocationManager.instance.addLocationToWanted(newLocation);
       }
-    } catch (e) {
-      print('Error reading NFC: $e');
     }
-    print("sortie du read");
+// Cette ligne redirige vers la SelectPage
   }
 
   @override
@@ -96,36 +76,36 @@ class _ImportPageState extends State<ImportPage> with WidgetsBindingObserver {
         title: Text(widget.title),
       ),
       body: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        // Afficher le message en fonction de la disponibilité du NFC
-        Text(
-          _isNfcAvailable
-              ? 'NFC est activé'
-              : 'NFC est désactivé, veuillez l\'activer',
-          style: TextStyle(fontSize: 18),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: _importCSV,
+              child: const Text("Importer fichier CSV"),
+            ),
+            if (importedData.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              Text("Données importées :"),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: importedData.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(importedData[index].toString()),
+                  );
+                },
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Naviguer vers la page SelectPage
+                  GoRouter.of(context).pop('/select_page');
+                },
+                child: const Text('Retour à la SelectPage'),
+              ),
+            ],
+          ],
         ),
-        // Si NFC est désactivé, afficher le bouton "Activer le NFC"
-        if (!_isNfcAvailable)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: ElevatedButton(
-              onPressed: openNfcSettings, // Ouvre les paramètres du NFC
-              child: Text('Activer le NFC'),
-            ),
-          ),
-        // Bouton de transfert affiché uniquement si le NFC est activé
-        if (_isNfcAvailable)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: ElevatedButton(
-              onPressed: () {
-                _startNFCReading();
-                print("Bouton Import - Reception de données appuyé.");
-              },
-              child: Text("Lancer la reception de données"),
-            ),
-          ),
-      ])),
+      ),
     );
   }
 }

@@ -6,15 +6,22 @@ import 'contact.dart';
 import 'localization.dart';
 
 class Location {
-  String nom;
-  String? description;
-  WeeklySchedule? schedule;
-  Contact? contact;
-  String? photoUrl;
-  Categories category;
-  List<Activities>? activities;
-  Localization localization;
+  final String nom;
+  final String? description;
+  final WeeklySchedule? schedule;
+  final Contact? contact;
+  final String? photoUrl;
+  final Categories category;
+  final List<Activities>? activities;
+  final Localization localization;
 
-  Location(this.nom, this.description, this.schedule, this.contact,
-      this.photoUrl, this.category, this.activities, this.localization);
+  Location(
+      {required this.nom,
+      required this.description,
+      this.schedule,
+      this.contact,
+      required this.photoUrl,
+      required this.category,
+      required this.activities,
+      required this.localization});
 }
