@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:swipezone/domains/location_manager.dart';
 import 'package:swipezone/repositories/models/location.dart';
 
@@ -13,7 +12,20 @@ class SelectPage extends StatefulWidget {
 }
 
 class _SelectPageState extends State<SelectPage> {
-  Map<Location, bool> plans = {};
+  List<Location> plans = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlans();
+  }
+
+  Future<void> _loadPlans() async {
+    List<Location> fetchedPlans = LocationManager().wantedLocations;
+    setState(() {
+      plans = fetchedPlans;
+    });
+  }
 
   // Fonction pour ouvrir le menu flottant
   void _showImportExportMenu() {
@@ -29,7 +41,7 @@ class _SelectPageState extends State<SelectPage> {
                 leading: Icon(Icons.file_upload),
                 title: Text("Import"),
                 onTap: () {
-                  GoRouter.of(context).go('/import_page');
+                  // Logique pour "Import"
                   print("Import clicked");
                   Navigator.pop(context); // Ferme le menu
                 },
@@ -38,7 +50,6 @@ class _SelectPageState extends State<SelectPage> {
                 leading: Icon(Icons.file_download),
                 title: Text("Export"),
                 onTap: () {
-                  GoRouter.of(context).go('/export_page');
                   // Logique pour "Export"
                   print("Export clicked");
                   Navigator.pop(context); // Ferme le menu
@@ -51,60 +62,6 @@ class _SelectPageState extends State<SelectPage> {
     );
   }
 
-void _showBottomMenu(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.file_upload),
-              title: const Text("Import Page"),
-              onTap: () {
-                GoRouter.of(context).go('/import_page');
-                Navigator.pop(context); // Ferme le menu
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.file_download),
-              title: const Text("Export Page"),
-              onTap: () {
-                GoRouter.of(context).go('/export_page');
-                Navigator.pop(context); // Ferme le menu
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.calendar_today),
-              title: const Text("Planning Page"),
-              onTap: () {
-                GoRouter.of(context).go('/planning_page');
-                Navigator.pop(context); // Ferme le menu
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPlans();
-  }
-
-  Future<void> _loadPlans() async {
-    Map<Location, bool> fetchedPlans = LocationManager().filters;
-    setState(() {
-      plans = fetchedPlans;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,43 +72,16 @@ void _showBottomMenu(BuildContext context) {
       body: ListView.builder(
         itemCount: plans.length,
         itemBuilder: (context, index) {
-          bool isCheck = plans.values.elementAt(index);
           return ListTile(
-              //leading: Image.network(plans[index].photoUrl ?? "", width: 50, height: 50),
-              title: Text(plans.keys.elementAt(index).nom),
-              trailing: Checkbox(
-                  value: isCheck,
-                  onChanged: (val) {
-                    setState(() {
-                      isCheck = !isCheck;
-                      plans[plans.keys.elementAt(index)] = isCheck;
-                    });
-                  }));
+            title: Text(plans[index].nom),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
-<<<<<<< HEAD
-<<<<<<< HEAD
-        onPressed: () {
-          GoRouter.of(context).push('/planningpage');
-        },
+        onPressed: _showImportExportMenu, // Appel de la fonction pour ouvrir le menu
         tooltip: 'Add plan',
         child: const Icon(Icons.add),
-=======
-        onPressed: () {
-         _showBottomMenu(context);
-        },
-        tooltip: 'Options',
-        child: const Icon(Icons.menu),
->>>>>>> f3d6ef6 (import page completed)
       ),
-=======
-  onPressed: _showImportExportMenu, 
-  tooltip: 'Import/export Choices',
-  child: const Icon(Icons.add),  // Le "+" sera représenté par l'icône "add"
-),
-
->>>>>>> eb89fc1 (bouton import/export)
     );
   }
 }

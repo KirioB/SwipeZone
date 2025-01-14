@@ -9,6 +9,7 @@ import 'package:swipezone/screens/planning_page.dart';
 import 'package:swipezone/screens/select_page.dart';
 import 'package:swipezone/theme/theme.dart';
 import 'package:swipezone/theme/theme_provider.dart';
+import 'package:swipezone/domains/location_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,12 +79,20 @@ final GoRouter _router = GoRouter(
               );
             }),
         GoRoute(
-            path: '/export_page',
-            builder: (BuildContext context, GoRouterState state) {
-              return const ExportPage(
-                title: "Export Page",
-              );
-            })
+          path: '/export_page',
+          builder: (BuildContext context, GoRouterState state) {
+            // Récupérer les données de LocationManager
+            final locationsData = LocationManager().locations
+                .map((location) => [location.nom, location.description, location.schedule,location.contact,location.photoUrl,location.category,location.activities,location.localization])
+                .toList();
+
+            return ExportPage(
+              title: "Export Page",
+              locations: locationsData,
+            );
+          },
+        ),
+
       ],
     ),
   ],
