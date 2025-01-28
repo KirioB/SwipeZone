@@ -79,16 +79,7 @@ class _HomePageState extends State<HomePage> {
 
             return ListView(children: [
               LocationCard(location: data[LocationManager().currentIndex]),
-              Center(
-                child: Switch(
-                  value: Provider.of<ThemeProvider>(context).getThemeMode() ==
-                      ThemeMode.dark,
-                  onChanged: (value) {
-                    Provider.of<ThemeProvider>(context, listen: false)
-                        .toggleTheme();
-                  },
-                ),
-              ),
+              
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

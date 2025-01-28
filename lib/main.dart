@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart'; // Add this import
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart'; 
+
 import 'package:swipezone/screens/export_page.dart';
 import 'package:swipezone/screens/home_page.dart';
 import 'package:swipezone/screens/import_page.dart';
@@ -14,35 +14,13 @@ import 'package:swipezone/domains/location_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final pref = await SharedPreferences.getInstance();
+  
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(pref: pref),
-      child: MyApp(),
+    MaterialApp.router(
+      routerConfig: _router,
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return Builder(
-          builder: (context) {
-            final theme = MaterialTheme(Theme.of(context).textTheme);
-            return MaterialApp.router(
-              routerConfig: _router,
-              themeMode: themeProvider.getThemeMode(),
-              theme: theme.lightMediumContrast(),
-              darkTheme: theme.dark(),
-            );
-          },
-        );
-      },
-    );
-  }
 }
 
 final GoRouter _router = GoRouter(

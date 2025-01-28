@@ -42,14 +42,59 @@ class _ImportPageState extends State<ImportPage> {
     }
   }
 
+  Localization _parseLocalization(String? localizationData) {
+  if (localizationData == null || localizationData.isEmpty) {
+    // Retourne une localisation par défaut si les données sont nulles ou vides
+    return Localization('', 0.0, 0.0);
+  }
+
+  // Sépare les données par des virgules
+  List<String> parts = localizationData.split(',');
+
+  // Extraire l'adresse, la latitude et la longitude
+  String address = parts.isNotEmpty ? parts[0] : ''; // Première partie : adresse
+  double latitude = parts.length > 1 ? double.tryParse(parts[1]) ?? 0.0 : 0.0; // Deuxième partie : latitude
+  double longitude = parts.length > 2 ? double.tryParse(parts[2]) ?? 0.0 : 0.0; // Troisième partie : longitude
+
+  return Localization(address, latitude, longitude);
+}
+
+
   // Ajouter les données importées dans le LocationManager
-  void _addDataToLocationManager(
-      List<List<dynamic>> data, BuildContext context) {
+  void _addDataToLocationManager(List<List<dynamic>> data, BuildContext context) {
     // Assumer que les données sont bien formatées pour correspondre à Location
     for (var item in data) {
       if (item.length >= 8) {
+        
+      Location newLocation = Location(
+        nom: item[0] ?? '',
+        description: item[1] ?? '',
+        schedule: item[2] != 'null' ? item[2] : null, // Si la valeur peut être null
+        contact: item[3] != 'null' ? item[3] : null,
+        photoUrl: item[4] ?? '',
+        category: Categories.values.firstWhere(
+          (c) => c.toString() == item[5],
+          orElse: () => Categories.Church,
+        ),
+        activities: item[6]?.split(',').map((activity) {
+          return Activities.values.firstWhere(
+            (a) => a.toString().split('.').last == activity, // Comparaison après extraction du nom
+            orElse: () => Activities.Boxing,
+            );
+        }).toList().cast<Activities>() ?? [],
+
+        
+        localization: _parseLocalization(item[7]),);
+
         // Créer une nouvelle instance de Location à partir des données importées
-        if (item[2]=='null'){}
+        
+        
+
+/*
+        for(int i=0;i <item.length; i++){
+          if (item[i]=='null'|| item[i] == null){
+            item[i] = null;
+          }
         Location newLocation = Location(
           nom: item[0] ?? '',
           description: item[1] ?? '',
@@ -60,7 +105,7 @@ class _ImportPageState extends State<ImportPage> {
           activities: [Activities.Boxing],
           localization: Localization("", 0.0, 0.0),
         );
-
+*/
         // Ajouter la nouvelle location dans le LocationManager
         LocationManager.instance.addLocationToWanted(newLocation);
       }
@@ -91,7 +136,7 @@ class _ImportPageState extends State<ImportPage> {
                 itemCount: importedData.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(importedData[index].toString()),
+                    //title: Text(importedData[index].toString()),
                   );
                 },
               ),
