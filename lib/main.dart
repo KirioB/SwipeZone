@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart'; 
-
 import 'package:swipezone/screens/export_page.dart';
 import 'package:swipezone/screens/home_page.dart';
 import 'package:swipezone/screens/import_page.dart';
 import 'package:swipezone/screens/planning_page.dart';
 import 'package:swipezone/screens/select_page.dart';
-import 'package:swipezone/theme/theme.dart';
-import 'package:swipezone/theme/theme_provider.dart';
 import 'package:swipezone/domains/location_manager.dart';
 
 void main() async {

@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:swipezone/domains/location_manager.dart';
 import 'package:swipezone/domains/locations_usecase.dart';
 import 'package:swipezone/screens/widgets/location_card.dart';
 import 'dart:isolate';
-import 'dart:async';
 
-import 'package:swipezone/theme/theme_provider.dart';
 
 class IsolateMessage {
   final SendPort sendPort;
   IsolateMessage(this.sendPort);
 }
 
-void popupIsolate(IsolateMessage message) {
-  final Timer periodicTimer = Timer.periodic(
-    const Duration(seconds: 10),
-    (timer) {
-      message.sendPort.send('showPopup');
-    },
-  );
-}
+
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -45,12 +34,6 @@ class _HomePageState extends State<HomePage> {
   void startPopupIsolate() async {
     // Create communication ports
     receivePort = ReceivePort();
-
-    // Spawn the isolate
-    await Isolate.spawn<IsolateMessage>(
-      popupIsolate,
-      IsolateMessage(receivePort!.sendPort),
-    );
   }
 
   @override

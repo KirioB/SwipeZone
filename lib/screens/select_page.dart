@@ -19,7 +19,7 @@ class _SelectPageState extends State<SelectPage> {
   @override
   void initState() {
     super.initState();
-    bool shouldShowImportCvs = true;
+
     _loadPlans();
   }
 
